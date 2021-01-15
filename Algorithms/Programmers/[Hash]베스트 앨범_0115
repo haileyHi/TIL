@@ -1,0 +1,51 @@
+import java.util.*;
+import java.util.stream.*;
+
+class Solution {
+    public int[] solution(String[] genres, int[] plays) {
+        int[] answer = {};
+        int[] result = new int[genres.length];
+        int playCount, secCount, songID, secondSongID;
+        int cnt = 0, check = 0;
+        
+        HashMap<String,Integer> totalPlays = new HashMap<>();
+        for(int i = 0; i<genres.length;i++){
+            totalPlays.put(genres[i], totalPlays.getOrDefault(genres[i],0)+plays[i]);
+        }
+        
+        List<String> keySetList = new ArrayList<>(totalPlays.keySet());
+        Collections.sort(keySetList,((o2, o1) -> (totalPlays.get(o1).compareTo(totalPlays.get(o2)))));//내림차순
+        // 오름차순은 Collections.sort(keySetList,((o1, o2) -> (totalPlays.get(o1).compareTo(totalPlays.get(o2)))));
+
+        for(String key : keySetList){ //장르 종류 수 만큼 반복
+            playCount = 0;
+            secCount = 0;
+            secondSongID = -2;
+            songID = -1;
+            for(int i = 0; i<genres.length; i++){
+                if(genres[i].equals(key) && plays[i] > playCount){
+                    secCount = playCount;
+                    playCount = plays[i];
+                    secondSongID = songID;//해당 장르 곡이 하나면 -1이 들어가도록.
+                    songID = i;
+                }else if(genres[i].equals(key) && plays[i] > secCount){
+                     secCount = plays[i];
+                     secondSongID = i;
+                }
+            }
+            check += 1;
+            result[cnt++] = songID;
+            if(secondSongID > -1) {
+                result[cnt++] = secondSongID;
+                check += 1;
+            }
+        }
+        answer = new int[check];
+        for(int i = 0; i < check; i++){
+            answer[i] = result[i];
+        }
+
+        return answer;
+    }
+    
+}
