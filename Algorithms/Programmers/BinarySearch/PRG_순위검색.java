@@ -13,9 +13,15 @@ class Solution {
         
         // map.get(key) 안에 있는 점수들 정렬하기. 
         // how to get both key and value in map. -> https://stackabuse.com/java-how-to-get-keys-and-values-from-a-map/
+        /*
         for (Map.Entry<String, ArrayList<Integer>> item : map.entrySet()){
             Collections.sort(item.getValue());
         }
+        */
+        for (ArrayList<Integer> item : map.values()) {
+            Collections.sort(item);
+        }
+        
         
         int idx = 0;
         for (String s : query) {
@@ -28,17 +34,12 @@ class Solution {
             String q_exp = st.nextToken();
             st.nextToken();
             String q_food = st.nextToken();
-            String q_score = st.nextToken();
+            Integer q_score = Integer.parseInt(st.nextToken());
             // 지원자 필터링하기.
             String checkKey = q_lan + q_part + q_exp + q_food;
             if (map.containsKey(checkKey)) {
-                if (!q_score.equals("-")) {
-                    int standard_score = Integer.parseInt(q_score);
-                    int count = search(map.get(checkKey), standard_score);
-                    cnt += count;
-                } else {
-                    cnt = map.get(checkKey).size();
-                }
+                int count = search(map.get(checkKey), q_score);
+                cnt += count;
             }
 
             answer[idx++] = cnt;
